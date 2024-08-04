@@ -1,14 +1,18 @@
 pkgbase = python-conda
 	pkgdesc = OS-agnostic, system-level binary package manager and ecosystem https://conda.io
-	pkgver = 23.1.0
+	pkgver = 24.7.1
 	pkgrel = 1
 	url = https://github.com/conda/conda
 	arch = any
 	license = BSD
+	makedepends = python-build
+	makedepends = python-installer
 	makedepends = python-setuptools
+	makedepends = python-wheel
 	depends = python>=3.7
 	depends = python-setuptools
 	depends = python-conda-package-handling
+	depends = python-libmamba
 	depends = python-pluggy>=1.0.0
 	depends = python-pycosat>=0.6.3
 	depends = python-requests>=2.20.1
@@ -17,7 +21,7 @@ pkgbase = python-conda
 	provides = python-conda-env
 	options = !emptydirs
 	backup = etc/conda/condarc
-	source = conda-23.1.0.tar.gz::https://github.com/conda/conda/archive/23.1.0.tar.gz
-	sha512sums = 43a9786efbee9d1de9f7b19b852a34d6bf120e3e93adf13ac67094b0f53b608fc52fd7d98c478af5e8d679d62bdd7acd339b07f0344b15507554c98eea86caff
+	source = conda-24.7.1.tar.gz::https://github.com/conda/conda/archive/24.7.1.tar.gz
+	sha512sums = 8fbd8e868a9ac0a73c0d940a393ebbf25f16d1b82ca6c59691e148dbb20c7d4767794fae72cd9a84f071714065e80f8f859f629a239e75feaf43c5d570625a59
 
 pkgname = python-conda

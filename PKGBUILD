@@ -3,7 +3,7 @@
 
 pkgname=python-conda
 _name=${pkgname#python-}
-pkgver=23.1.0
+pkgver=24.7.1
 pkgrel=1
 pkgdesc="OS-agnostic, system-level binary package manager and ecosystem https://conda.io"
 arch=('any')
@@ -13,19 +13,25 @@ depends=(
   'python>=3.7'
   'python-setuptools'
   'python-conda-package-handling'
+  'python-libmamba'
   'python-pluggy>=1.0.0'
   'python-pycosat>=0.6.3'
   'python-requests>=2.20.1'
   'python-ruamel-yaml>=0.11.14'
 )
-makedepends=('python-setuptools')
+makedepends=(
+  'python-build'
+  'python-installer'
+  'python-setuptools'
+  'python-wheel'
+)
 provides=('python-conda' 'python-conda-env')
 options=(!emptydirs)
 backup=(etc/conda/condarc)
 source=(
   $_name-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz
 )
-sha512sums=('43a9786efbee9d1de9f7b19b852a34d6bf120e3e93adf13ac67094b0f53b608fc52fd7d98c478af5e8d679d62bdd7acd339b07f0344b15507554c98eea86caff')
+sha512sums=('8fbd8e868a9ac0a73c0d940a393ebbf25f16d1b82ca6c59691e148dbb20c7d4767794fae72cd9a84f071714065e80f8f859f629a239e75feaf43c5d570625a59')
 
 prepare() {
   cd $srcdir/${_name}-$pkgver
@@ -40,17 +46,16 @@ prepare() {
   # echo 'set _CONDA_EXE=/usr/bin/conda' | cat - conda/shell/etc/profile.d/conda.csh > conda.csh
   # echo 'export CONDA_EXE=/usr/bin/conda' | cat - conda/shell/etc/profile.d/conda.sh > conda.sh
   echo -e 'envs_dirs:\n  - ~/.conda/envs\npkgs_dirs:\n  - ~/.conda/pkgs' > condarc
-  sed -i "s/'conda=conda\.cli\.main_pip:main'/'conda=conda\.cli\.main:main','conda-env=conda_env\.cli\.main:main'/" setup.py
 }
 
 build() {
   cd $srcdir/${_name}-$pkgver
-  python setup.py build
+  python -m build
 }
 
 package() {
   cd $srcdir/${_name}-$pkgver
-  python setup.py install --root=$pkgdir --optimize=1 --skip-build
+  python -m installer --destdir $pkgdir $srcdir/${_name}-$pkgver/dist/${_name}-$pkgver-*.whl
   rm -f conda/shell/bin/{,de}activate
   # for _bin in $(ls conda/shell/bin); do
   #   install -Dm 655 conda/shell/bin/$_bin $pkgdir/usr/bin/$_bin
@@ -64,7 +69,7 @@ package() {
   ln -s ${_dir_sitepackage}/conda/shell/etc/profile.d/conda.csh $pkgdir/etc/profile.d/conda.csh
   ln -s ${_dir_sitepackage}/conda/shell/etc/profile.d/conda.sh $pkgdir/etc/profile.d/conda.sh
   install -Dm 644 condarc $pkgdir/etc/conda/condarc
-  install -Dm 644 LICENSE.txt $pkgdir/usr/share/licenses/${pkgname}/LICENSE.txt
+  install -Dm 644 LICENSE $pkgdir/usr/share/licenses/${pkgname}/LICENSE
 }
 
 # vim:set ts=2 sw=2 et:
