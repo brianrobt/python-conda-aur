@@ -5,25 +5,33 @@
 pkgname=python-conda
 _name=${pkgname#python-}
 pkgver=24.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc="OS-agnostic, system-level binary package manager and ecosystem https://conda.io"
 arch=('any')
 url="https://github.com/conda/conda"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   'python>=3.7'
-  'python-setuptools'
+  'python-boltons'
+  'python-boto3'
+  'python-botocore'
   'python-conda-package-handling'
   'python-libmamba'
   'python-pluggy>=1.0.0'
   'python-pycosat>=0.6.3'
   'python-requests>=2.20.1'
   'python-ruamel-yaml>=0.11.14'
+  'python-tqdm'
+)
+checkdepends=(
+  'python-pytest'
+  'python-pytest-mock'
 )
 makedepends=(
   'python-build'
   'python-installer'
   'python-setuptools'
+  'python-setuptools-scm'
   'python-wheel'
 )
 provides=('python-conda' 'python-conda-env')
