@@ -1,7 +1,7 @@
 pkgbase = python-conda
 	pkgdesc = OS-agnostic, system-level binary package manager and ecosystem https://conda.io
 	pkgver = 24.7.1
-	pkgrel = 3
+	pkgrel = 4
 	url = https://github.com/conda/conda
 	arch = any
 	license = BSD-3-Clause
@@ -9,8 +9,8 @@ pkgbase = python-conda
 	checkdepends = python-pytest-mock
 	makedepends = python-build
 	makedepends = python-installer
-	makedepends = python-setuptools
-	makedepends = python-setuptools-scm
+	makedepends = python-hatchling
+	makedepends = python-hatch-vcs
 	makedepends = python-wheel
 	depends = python>=3.7
 	depends = python-archspec

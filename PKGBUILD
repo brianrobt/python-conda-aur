@@ -5,7 +5,7 @@
 pkgname=python-conda
 _name=${pkgname#python-}
 pkgver=24.7.1
-pkgrel=3
+pkgrel=4
 pkgdesc="OS-agnostic, system-level binary package manager and ecosystem https://conda.io"
 arch=('any')
 url="https://github.com/conda/conda"
@@ -31,8 +31,8 @@ checkdepends=(
 makedepends=(
   'python-build'
   'python-installer'
-  'python-setuptools'
-  'python-setuptools-scm'
+  'python-hatchling'
+  'python-hatch-vcs'
   'python-wheel'
 )
 provides=('python-conda' 'python-conda-env')
@@ -69,7 +69,7 @@ prepare() {
 
 build() {
   cd $srcdir/${_name}-$pkgver
-  python -m build
+  python -m build --wheel --no-isolation
 }
 
 package() {
