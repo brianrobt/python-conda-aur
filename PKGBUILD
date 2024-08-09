@@ -5,13 +5,14 @@
 pkgname=python-conda
 _name=${pkgname#python-}
 pkgver=24.7.1
-pkgrel=2
+pkgrel=3
 pkgdesc="OS-agnostic, system-level binary package manager and ecosystem https://conda.io"
 arch=('any')
 url="https://github.com/conda/conda"
 license=('BSD-3-Clause')
 depends=(
   'python>=3.7'
+  'python-archspec'
   'python-boltons'
   'python-boto3'
   'python-botocore'
@@ -51,6 +52,15 @@ prepare() {
   sed -i '3s/^/set _CONDA_EXE=\/usr\/bin\/conda\n/' conda/shell/etc/profile.d/conda.csh
   sed -i '3s/^/export CONDA_EXE=\/usr\/bin\/conda\n/' conda/shell/etc/profile.d/conda.sh
   sed -i '8s/^/set -l CONDA_EXE \/usr\/bin\/conda\n/' conda/shell/etc/fish/conf.d/conda.fish
+  # BEGIN Patch conda binary
+  sed -i 's/ import/.main import/'  conda/shell/bin/conda
+  sed -i 's/path.main/path/'  conda/shell/bin/conda
+  sed -i 's/from conda.deprecations/# from conda.deprecations/'  conda/shell/bin/conda
+  sed -i 's/deprecated.module/# deprecated.module/'  conda/shell/bin/conda
+  sed -i 's/"24/# "24/g'  conda/shell/bin/conda
+  sed -i 's/addendum/# addendum/g'  conda/shell/bin/conda
+  sed -i 's/  )/#  )/'  conda/shell/bin/conda
+  # END
   # echo 'set -l CONDA_EXE /usr/bin/conda' | cat - conda/shell/etc/fish/conf.d/conda.fish > conda.fish
   # echo 'set _CONDA_EXE=/usr/bin/conda' | cat - conda/shell/etc/profile.d/conda.csh > conda.csh
   # echo 'export CONDA_EXE=/usr/bin/conda' | cat - conda/shell/etc/profile.d/conda.sh > conda.sh
@@ -77,6 +87,10 @@ package() {
   ln -s ${_dir_sitepackage}/conda/shell/etc/fish/conf.d/conda.fish $pkgdir/usr/share/fish/functions/conda.fish
   ln -s ${_dir_sitepackage}/conda/shell/etc/profile.d/conda.csh $pkgdir/etc/profile.d/conda.csh
   ln -s ${_dir_sitepackage}/conda/shell/etc/profile.d/conda.sh $pkgdir/etc/profile.d/conda.sh
+  # BEGIN Install patched conda binary
+  rm -f $pkgdir/usr/bin/conda
+  install -Dm 755 conda/shell/bin/conda $pkgdir/usr/bin/conda
+  # END
   install -Dm 644 condarc $pkgdir/etc/conda/condarc
   install -Dm 644 LICENSE $pkgdir/usr/share/licenses/${pkgname}/LICENSE
 }
